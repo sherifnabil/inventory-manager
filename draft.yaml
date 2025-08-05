@@ -12,7 +12,7 @@ models:
   Stock:
     quantity: integer
     relationships:
-      belongsTo: Warehouse InventoryItem:item_id
+      belongsTo: Warehouse InventoryItem
 
   StockTransfer:
     item_id: integer
@@ -21,4 +21,4 @@ models:
     quantity: integer min:1
     transferred_at: timestamp default:now
     relationships:
-      belongsTo: InventoryItem:item_id Warehouse from_warehouse_id to_warehouse_id
+      belongsTo: InventoryItem Warehouse:from_warehouse Warehouse:to_warehouse

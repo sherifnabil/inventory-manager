@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\HasSKU;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InventoryItem extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSKU;
 
     /**
      * The attributes that are mass assignable.
@@ -18,22 +19,11 @@ class InventoryItem extends Model
     protected $fillable = [
         'name',
         'sku',
+        'price',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function stocks(): HasMany
     {
-        return [
-            'id' => 'integer',
-        ];
-    }
-
-    public function stockWarehouses(): HasMany
-    {
-        return $this->hasMany(StockWarehouse::class);
+        return $this->hasMany(Stock::class, 'item_id');
     }
 }

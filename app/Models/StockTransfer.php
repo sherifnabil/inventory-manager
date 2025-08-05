@@ -21,25 +21,23 @@ class StockTransfer extends Model
         'to_warehouse_before_quantity',
         'quantity',
         'transferred_at',
-        'item_id_warehouse_from_warehouse_id_to_warehouse_id_id',
+        'from_warehouse_id',
+        'to_warehouse_id',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+
+    public function fromWarehouse(): BelongsTo
     {
-        return [
-            'id' => 'integer',
-            'transferred_at' => 'timestamp',
-            'item_id_warehouse_from_warehouse_id_to_warehouse_id_id' => 'integer',
-        ];
+        return $this->belongsTo(Warehouse::class, 'from_warehouse_id');
     }
 
-    public function itemIdWarehouseFromWarehouseIdToWarehouse(): BelongsTo
+    public function toWarehouse(): BelongsTo
     {
-        return $this->belongsTo(InventoryItem::class);
+        return $this->belongsTo(Warehouse::class, 'to_warehouse_id');
+    }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(InventoryItem::class, 'item_id');
     }
 }

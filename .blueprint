@@ -3,10 +3,10 @@ created:
     - database/factories/InventoryItemFactory.php
     - database/factories/StockFactory.php
     - database/factories/StockTransferFactory.php
-    - database/migrations/2025_08_05_191020_create_warehouses_table.php
-    - database/migrations/2025_08_05_191021_create_inventory_items_table.php
-    - database/migrations/2025_08_05_191022_create_stocks_table.php
-    - database/migrations/2025_08_05_191023_create_stock_transfers_table.php
+    - database/migrations/2025_08_05_192244_create_warehouses_table.php
+    - database/migrations/2025_08_05_192245_create_inventory_items_table.php
+    - database/migrations/2025_08_05_192246_create_stocks_table.php
+    - database/migrations/2025_08_05_192247_create_stock_transfers_table.php
     - app/Models/Warehouse.php
     - app/Models/InventoryItem.php
     - app/Models/Stock.php
@@ -14,5 +14,5 @@ created:
 models:
     Warehouse: { name: 'string:200', location: 'string:100 nullable' }
     InventoryItem: { name: 'string:150', sku: 'string:100', relationships: { hasMany: 'Stock Warehouse' } }
-    Stock: { quantity: integer, relationships: { belongsTo: 'Warehouse InventoryItem:item_id' } }
-    StockTransfer: { item_id: integer, from_warehouse_before_quantity: integer, to_warehouse_before_quantity: integer, quantity: 'integer min:1', transferred_at: 'timestamp default:now', relationships: { belongsTo: 'InventoryItem:item_id Warehouse from_warehouse_id to_warehouse_id' } }
+    Stock: { quantity: integer, relationships: { belongsTo: 'Warehouse InventoryItem' } }
+    StockTransfer: { item_id: integer, from_warehouse_before_quantity: integer, to_warehouse_before_quantity: integer, quantity: 'integer min:1', transferred_at: 'timestamp default:now', relationships: { belongsTo: 'InventoryItem Warehouse:from_warehouse Warehouse:to_warehouse' } }

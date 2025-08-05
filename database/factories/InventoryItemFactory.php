@@ -22,6 +22,7 @@ class InventoryItemFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'price' => fake()->randomFloat(2, 1, 100),
             'sku' => fake()->regexify('[A-Za-z0-9]{100}'),
         ];
     }

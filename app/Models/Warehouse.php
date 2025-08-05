@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Warehouse extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,15 +21,13 @@ class Warehouse extends Model
         'location',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    public function fromTransfers(): HasMany
     {
-        return [
-            'id' => 'integer',
-        ];
+        return $this->hasMany(StockTransfer::class, 'from_warehouse_id');
+    }
+
+    public function toTransfers(): HasMany
+    {
+        return $this->hasMany(StockTransfer::class, 'to_warehouse_id');
     }
 }
