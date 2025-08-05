@@ -1,0 +1,24 @@
+models:
+  Warehouse:
+    name: string:200
+    location: string:100 nullable
+
+  InventoryItem:
+    name: string:150
+    sku: string:100
+    relationships:
+      hasMany: Stock Warehouse
+
+  Stock:
+    quantity: integer
+    relationships:
+      belongsTo: Warehouse InventoryItem:item_id
+
+  StockTransfer:
+    item_id: integer
+    from_warehouse_before_quantity: integer
+    to_warehouse_before_quantity: integer
+    quantity: integer min:1
+    transferred_at: timestamp default:now
+    relationships:
+      belongsTo: InventoryItem:item_id Warehouse from_warehouse_id to_warehouse_id
