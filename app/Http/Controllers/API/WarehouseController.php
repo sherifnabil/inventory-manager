@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use App\Services\WarehouseService;
 use App\Http\Controllers\Controller;
 use App\Http\DTOs\WarehouseSearchDTO;
+use Illuminate\Support\Facades\Cache;
 use App\Services\InventoryItemService;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\DTOs\InventoryItemSearchDTO;
@@ -65,17 +66,30 @@ class WarehouseController extends Controller
 
     public function inventoryItems(Warehouse $warehouse): JsonResponse
     {
-        $searchDTO = new InventoryItemSearchDTO(
-            name: null,
-            min_price: null,
-            max_price: null,
-            warehouse_id: $warehouse->id
-        );
+        $cacheLifetime = 60 * 60; // 1 hour
+        $cacheIdentifier = "warehouse:{$warehouse->id}:inventory";
 
-        $items = $this->inventoryItemService->search(
-            filters: $searchDTO,
-            perPage: 'all'
-        );
+        $items = match (Cache::has($cacheIdentifier)) {
+            true => Cache::get($cacheIdentifier),
+
+            false => Cache::remember(
+                $cacheIdentifier,
+                $cacheLifetime,
+                function () use ($warehouse) {
+                    $searchDTO = new InventoryItemSearchDTO(
+                        name: null,
+                        min_price: null,
+                        max_price: null,
+                        warehouse_id: $warehouse->id
+                    );
+
+                    return $this->inventoryItemService->search(
+                        filters: $searchDTO,
+                        perPage: 'all'
+                    );
+                }
+            ),
+        };
 
         return ApiHelper::paginationApiResponse(InventoryItemResource::collection($items), $items->items());
     }
