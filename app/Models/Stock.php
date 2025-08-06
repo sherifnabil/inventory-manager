@@ -18,10 +18,16 @@ class Stock extends Model
     protected $fillable = [
         'quantity',
         'item_id',
+        'warehouse_id',
     ];
 
     public function item(): BelongsTo
     {
         return $this->belongsTo(InventoryItem::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }
