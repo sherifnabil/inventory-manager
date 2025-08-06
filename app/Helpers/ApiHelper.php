@@ -15,9 +15,23 @@ class ApiHelper
      */
     public static function apiResponse($data, bool $success = true, int $statusCode = 200): JsonResponse
     {
-        return response()->json([
+        return new JsonResponse([
             'data' => $data,
             'success' => $success,
+        ], $statusCode);
+    }
+
+    /**
+     * Standard API failure response
+     * @param string $msg
+     * @param int $statusCode
+     * @return JsonResponse
+     */
+    public static function failApiResponse(string $msg =  '', int $statusCode = 400): JsonResponse
+    {
+        return new JsonResponse([
+            'message' => $msg,
+            'success' => false,
         ], $statusCode);
     }
 
