@@ -25,6 +25,7 @@ class InventoryItemController extends Controller
             name: $request->input('name'),
             min_price: (float) $request->input('min_price'),
             max_price: (float) $request->input('max_price'),
+            warehouse_id: null
         );
 
         $items = $this->service->search($searchDTO, $request->input('per_page', 10));

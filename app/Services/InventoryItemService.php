@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Models\InventoryItem;
 use App\Http\DTOs\DTOContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class InventoryItemService
 {
-    public function search(DTOContract $filters, int $perPage = 10): LengthAwarePaginator
+    public function search(DTOContract $filters, int|string $perPage = 10): LengthAwarePaginator|Collection
     {
         $query = InventoryItem::query()
             ->when(
@@ -27,6 +28,10 @@ class InventoryItemService
                 !empty($filters->max_price),
                 fn($q) => $q->where('price', '<=', $filters->max_price)
             );
+
+        if ($perPage == 'all') {
+            $perPage = $query->count();
+        }
 
         return $query->paginate($perPage);
     }

@@ -71,7 +71,11 @@ class WarehouseController extends Controller
             max_price: null,
             warehouse_id: $warehouse->id
         );
-        $items = $this->inventoryItemService->search($searchDTO, request()->input('per_page', 10));
+
+        $items = $this->inventoryItemService->search(
+            filters: $searchDTO,
+            perPage: 'all'
+        );
 
         return ApiHelper::paginationApiResponse(InventoryItemResource::collection($items), $items->items());
     }
