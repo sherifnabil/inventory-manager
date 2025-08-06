@@ -84,22 +84,21 @@ class StockTransferService
     {
         DB::beginTransaction();
         try {
-            // Check if stock exists in the to warehouse
+            // Check if stock exists in the to warehouse otherwise create a new one
             $stockTo = Stock::firstOrCreate([
                 'item_id' => $data['item_id'],
                 'warehouse_id' => $data['to_warehouse_id']
             ])->refresh();
 
-            // Create stock transfer
+            // adding before quantities to the data array
             $data['from_warehouse_before_quantity'] = $stockFrom->quantity;
             $data['to_warehouse_before_quantity'] = $stockTo->quantity;
 
+            // Create stock transfer
             $transfer = $this->create($data);
 
             // Update stock in the from warehouse
             $stockFrom->decrement('quantity', $data['quantity']);
-
-
 
             // Update stock in the to warehouse
             $stockTo->increment('quantity', $data['quantity']);
@@ -110,7 +109,6 @@ class StockTransferService
                 statusCode: Response::HTTP_CREATED
             );
         } catch (\Exception $e) {
-            dd($e->getMessage());
             DB::rollBack();
             return ApiHelper::failApiResponse(
                 msg: 'Transfer failed',
