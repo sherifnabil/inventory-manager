@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('to_warehouse_id')->constrained('warehouses')->onDelete('cascade');
 
             $table->timestamp('transferred_at')->default(now());
+            $table->timestamps();
         });
     }
 

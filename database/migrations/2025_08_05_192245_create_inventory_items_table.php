@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2)->index();
             $table->string('sku', 100)->unique();
             $table->timestamps();
         });
