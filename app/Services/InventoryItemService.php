@@ -32,7 +32,6 @@ class InventoryItemService
         return InventoryItem::create($data);
     }
 
-
     public function update(InventoryItem $item, array $data): InventoryItem
     {
         $item->update($data);
