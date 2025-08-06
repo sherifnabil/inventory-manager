@@ -23,7 +23,7 @@ class StockFactory extends Factory
     public function definition(): array
     {
         return [
-            'quantity' => fake()->numberBetween(-10000, 10000),
+            'quantity' => fake()->numberBetween(1, 10000),
             'item_id' => InventoryItem::inRandomOrder()->first()->id ?? InventoryItem::factory()->create()->id,
             'warehouse_id' => Warehouse::inRandomOrder()->first()->id ?? Warehouse::factory()->create()->id,
         ];
