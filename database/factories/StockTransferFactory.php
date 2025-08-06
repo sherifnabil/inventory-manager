@@ -22,14 +22,17 @@ class StockTransferFactory extends Factory
      */
     public function definition(): array
     {
+        $fromWarehouseId = Warehouse::inRandomOrder()->first()->id ?? Warehouse::factory()->create()->id;
+        $toWarehouseId = Warehouse::whereNotIn('id', [$fromWarehouseId])->inRandomOrder()->first()->id ?? Warehouse::factory()->create()->id;
+
         return [
-            'item_id' => InventoryItem::factory(),
+            'item_id' => InventoryItem::inRandomOrder()->first()->id ?? InventoryItem::factory()->create()->id,
             'from_warehouse_before_quantity' => fake()->numberBetween(-10000, 10000),
             'to_warehouse_before_quantity' => fake()->numberBetween(-10000, 10000),
             'quantity' => fake()->numberBetween(-10000, 10000),
             'transferred_at' => fake()->dateTime(),
-            'from_warehouse_id' => Warehouse::factory(),
-            'to_warehouse_id' => Warehouse::factory(),
+            'from_warehouse_id' => $fromWarehouseId,
+            'to_warehouse_id' => $toWarehouseId,
         ];
     }
 }

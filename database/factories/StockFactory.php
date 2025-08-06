@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Stock;
+use App\Models\Warehouse;
 use Illuminate\Support\Str;
 use App\Models\InventoryItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +24,8 @@ class StockFactory extends Factory
     {
         return [
             'quantity' => fake()->numberBetween(-10000, 10000),
-            'item_id' => InventoryItem::factory(),
+            'item_id' => InventoryItem::inRandomOrder()->first()->id ?? InventoryItem::factory()->create()->id,
+            'warehouse_id' => Warehouse::inRandomOrder()->first()->id ?? Warehouse::factory()->create()->id,
         ];
     }
 }
