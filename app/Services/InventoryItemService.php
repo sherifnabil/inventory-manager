@@ -12,6 +12,10 @@ class InventoryItemService
     {
         $query = InventoryItem::query()
             ->when(
+                !empty($filters->warehouse_id),
+                fn($q) => $q->whereHas('stocks', fn($q) => $q->where('warehouse_id', $filters->warehouse_id))
+            )
+            ->when(
                 !empty($filters->name),
                 fn($q) => $q->where('name', 'LIKE', '%' . $filters->name . '%')
             )
