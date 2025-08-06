@@ -9,14 +9,18 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Services\WarehouseService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\WarehouseRequest;
 use App\Http\DTOs\WarehouseSearchDTO;
+use App\Services\InventoryItemService;
+use App\Http\Requests\WarehouseRequest;
+use App\Http\DTOs\InventoryItemSearchDTO;
 use App\Http\Resources\WarehouseResource;
+use App\Http\Resources\InventoryItemResource;
 
 class WarehouseController extends Controller
 {
     public function __construct(
-        protected WarehouseService $service
+        protected WarehouseService $service,
+        protected InventoryItemService $inventoryItemService
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -57,5 +61,18 @@ class WarehouseController extends Controller
         $this->service->delete($warehouse);
 
         return ApiHelper::apiResponse(data: null, statusCode: Response::HTTP_NO_CONTENT);
+    }
+
+    public function inventoryItems(Warehouse $warehouse): JsonResponse
+    {
+        $searchDTO = new InventoryItemSearchDTO(
+            name: null,
+            min_price: null,
+            max_price: null,
+            warehouse_id: $warehouse->id
+        );
+        $items = $this->inventoryItemService->search($searchDTO, request()->input('per_page', 10));
+
+        return ApiHelper::paginationApiResponse(InventoryItemResource::collection($items), $items->items());
     }
 }
