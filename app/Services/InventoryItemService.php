@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Http\DTOs\DTOContract;
 use App\Models\InventoryItem;
+use App\Http\DTOs\DTOContract;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class InventoryItemService
@@ -37,11 +37,6 @@ class InventoryItemService
     {
         $item->update($data);
         return $item->refresh();
-    }
-
-    public function find(string $id): InventoryItem
-    {
-        return InventoryItem::findOrFail($id);
     }
 
     public function delete(InventoryItem $item): void
