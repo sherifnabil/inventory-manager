@@ -7,6 +7,7 @@ use App\Helpers\ApiHelper;
 use App\Models\StockTransfer;
 use Illuminate\Http\Response;
 use App\Http\DTOs\DTOContract;
+use App\Events\LowStockDetected;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\StockTransferResource;
@@ -104,6 +105,13 @@ class StockTransferService
             $stockTo->increment('quantity', $data['quantity']);
 
             DB::commit();
+
+            $alertQuantity = 5;
+            if ($stockFrom->quantity < $alertQuantity) {
+                $stockFrom = $stockFrom->refresh();
+                event(new LowStockDetected($stockFrom->item, $stockFrom->quantity));
+            }
+
             return ApiHelper::apiResponse(
                 data: new StockTransferResource($transfer->load('item', 'fromWarehouse', 'toWarehouse')),
                 statusCode: Response::HTTP_CREATED
